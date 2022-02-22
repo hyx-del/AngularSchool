@@ -1,0 +1,90 @@
+<content-header [buttonGroups]="buttons" [collection]="collection">
+    <ny-search-input [uri]="'school/teaching/course/list'" [pageSize]="50" (collection)="setCollection($event)">
+    </ny-search-input>
+</content-header>
+
+<ny-table [collection]="collection" [showIndex]="true">
+    <ng-template nyColumn label="操作" width='200px' let-item>
+        <ng-container *ngIf='item.status == -1'>
+            <a (click)="startUse(item)">启用</a>
+            <nz-divider nzType="vertical"></nz-divider>
+        </ng-container>
+        <ng-container *ngIf='item.status == 1'>
+            <a (click)='disable(item)'>禁用</a>
+            <nz-divider nzType="vertical"></nz-divider>
+        </ng-container>
+        <a (click)='remove(item)'>删除</a>
+    </ng-template>
+</ny-table>
+
+<ny-modal appendTo="nz-content" [isFull]="true" (onClose)="cancel()" [(visible)]="visible">
+    <ny-header>
+        <h2>课程添加</h2>
+        <p style="flex: 1"></p>
+        <button nz-button nzType="default" (click)="cancel()" style="margin-right: 16px;">取消</button>
+        <button nz-button nzType="primary" (click)="save()">保存</button>
+    </ny-header>
+    <div nyForm="form" (onInit)="onFormInit()">
+        <div class="form-group">
+            <label class="label"><em>*</em>名称:</label>
+            <div>
+                <input nz-input nyName='name' errorStyle="float" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>课程类型:</label>
+            <div>
+                <!-- <nz-select style="width: 200px;" nyName='type' errorStyle="float">
+          <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
+        </nz-select> -->
+                <input nz-input nyName='type' errorStyle="float" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">课程图片:</label>
+            <nz-upload class="avatar-uploader" nzListType="picture-card" [nzShowUploadList]="false"
+                [nzCustomRequest]="uploadImg">
+                <ng-container *ngIf="!params.picture">
+                    <i class="upload-icon" nz-icon [nzType]="UploadLoading ? 'loading' : 'plus'"></i>
+                    <div class="ant-upload-text">上传图片</div>
+                </ng-container>
+                <img *ngIf="params.picture" [src]="ossPath + params.picture" class="avatar" />
+            </nz-upload>
+            <input nz-input nyName="picture" hidden />
+        </div>
+
+        <div class="form-group flex-center">
+            <label class="label">是否考核:</label>
+            <div>
+                <nz-radio-group [(ngModel)]="params.examine">
+                    <label nz-radio [nzValue]="1">是</label>
+                    <label nz-radio [nzValue]="0">否</label>
+                </nz-radio-group>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>时长:</label>
+            <div>
+                <nz-input-number [nzMin]="0" style="width:110px;" nyName='duration' errorStyle="float">
+                </nz-input-number>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">权重:</label>
+            <div>
+                <nz-input-number [nzMin]="0" style="width:110px;" nyName='weights' errorStyle="float"></nz-input-number>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">课程介绍:</label>
+            <div>
+                <ueditor [(ngModel)]="remark"></ueditor>
+            </div>
+        </div>
+    </div>
+</ny-modal>

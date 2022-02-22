@@ -1,0 +1,57 @@
+:host{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+.reset-label {
+    width: 70px;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    > h3 {
+        margin: 0;
+        font-size: 16px;
+    }
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+   
+@media (min-width: 1600px)  { 
+    .table-box {
+        flex: 1;
+        display: flex;
+        >div {
+           width: 50%;
+        }
+
+        >div:nth-of-type(1) {
+            margin-right: 20px;
+        }
+
+        .tableHead {
+            color: #000;
+            font-size: 14px; 
+            font-weight: 600;
+        }
+    }
+}
+
+@media (max-width: 1400px)  {
+    .table-box {
+        display: block;
+        >div:nth-of-type(1) {
+            margin: 0;
+        }
+        >div:nth-of-type(2) {
+            margin-top: 20px;
+        }
+    }
+}

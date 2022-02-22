@@ -1,0 +1,76 @@
+<content-header [collection]="collection" [buttonGroups]="buttons">
+    <ny-search-input [uri]="'school/teaching-class/student/list'" [pageSize]="50" (collection)="setCollection($event)">
+    </ny-search-input>
+</content-header>
+
+<ny-table [collection]="collection" [showIndex]="true">
+	<ng-template nyColumn label='操作' let-item>	
+		<a (click)='distributeCertificate(item)' *ngIf='item.certificateshowstatus == -1'>颁发证书</a>
+		<a (click)='showCertificate(item)' *ngIf='item.certificateshowstatus == 1'>查看</a>
+	</ng-template>
+</ny-table>
+
+<!-- 证书查看 -->
+<nz-drawer [nzClosable]="false" [nzVisible]="certificateToSeeVisible" [nzWidth]="750" nzPlacement="right"
+               (nzOnClose)="closeDrawer()" [nzWrapClassName]="'custom-drawer'" [nzTitle]="title">
+	<ng-template #title>
+		<div class="drawer-header">
+			<h3>证书查看</h3>
+			<button nz-button nzType="primary" (click)="print()">打印</button>
+		</div>
+	</ng-template>
+
+	<div class="form-group" *ngIf='certificateDetails.certificate_template'>
+		<label class="label" style="width: 60px">证书名称:</label>
+		<div>
+			<input nz-input [disabled]="true" [(ngModel)]="certificateDetails.certificate_template.name">
+		</div>
+	</div>
+
+	<ng-container *ngIf="certificateDetails.certificate">
+		<div class="form-group">
+			<img [src]="ossPath+ certificateDetails.certificate" alt="" width="100%">
+		</div>
+	</ng-container>
+
+</nz-drawer>
+
+<!-- 详情 -->
+<student-detail *ngIf="detailVisible" [detailVisible]="detailVisible" (visibleChange)="close($event)"
+                [detailData]="detail"></student-detail>
+
+<!-- 证书派发model -->
+<nz-drawer [nzVisible]="certificateModelVisible" nzPlacement="right" [nzClosable]="false"
+           (nzOnClose)="certificateModelCancel()" [nzWidth]="750" [nzTitle]="drawerTitle" [nzWrapClassName]="'custom-drawer'">
+    <ng-template #drawerTitle>
+        <div class="drawer-header">
+            <h3>颁发证书</h3>
+            <div>
+                <button nz-button (click)="certificateModelCancel()" style="margin-right: 15px">取消</button>
+                <button nz-button nzType="primary" (click)="certificateModelOK()" [nzLoading]="loading">保存</button>
+            </div>
+        </div>
+    </ng-template>
+    <div nyForm="certificateForm" (onInit)="subCertificateForm()">
+        <div class="form-group">
+            <label class="label"><em>*</em>学期:</label>
+            <div>
+				<input nz-input [(ngModel)]="semesterName" disabled/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>选择证书模板:</label>
+            <div>
+                <nz-select style="width: 200px;" nyName="certificate_template_id" errorStyle="float"
+                           [(ngModel)]="certificate_template_id" (ngModelChange)="certificateChange($event)">
+                    <nz-option *ngFor="let item of certificateTemplateList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        
+        <div id="svg_template" *ngIf="imgSrc">
+            <img [src]="imgSrc" alt="" width="700px">
+        </div>
+    </div>
+</nz-drawer>

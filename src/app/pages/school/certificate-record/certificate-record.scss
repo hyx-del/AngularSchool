@@ -1,0 +1,15 @@
+.certificate-record {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    > h3 {
+        margin: 0;
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,151 @@
+<content-header [buttonGroups]="buttons" [collection]="collection">
+    <ny-complex-search [uri]="'school/teaching/semester-template/list'" [pageSize]="50" (collection)="setCollection($event)">
+    </ny-complex-search>
+</content-header>
+
+<ny-table [collection]="collection" [showIndex]="true">
+    <ng-template nyColumn label="操作" width="120px" let-item>
+        <a (click)="remove(item)">删除</a>
+        </ng-template>
+</ny-table>
+
+<ny-modal [isFull]="true" appendTo='nz-content' (onClose)="close()" [(visible)]="addModalVisible">
+    <ny-header>
+        <h2>{{ params.id ? '学期模板详情' : '创建学期模板'}}</h2>
+        <p style="flex: 1"></p>
+        <button nz-button nzType="default" (click)="close()" style="margin-right: 16px;">取消</button>
+        <button nz-button nzType="primary" (click)="saveForm()">保存</button>
+    </ny-header>
+    <div nyForm="form" (onInit)="initForm()">
+        <div class="form-group">
+            <label class="label"><em>*</em>模板名称</label>
+            <div>
+                <input nz-input nyName="name" errorStyle="float">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>类别:</label>
+            <div>
+                <nz-select
+                    style="width: 200px;"
+                    nzAllowClear
+                    nzPlaceHolder="请选择学期类别"
+                    nyName="category"
+                    errorStyle="float"
+                    >
+                    <nz-option nzLabel="常规课程" [nzValue]="1">常规课程</nz-option>
+                    <nz-option nzLabel="工作坊" [nzValue]="2">工作坊</nz-option>
+                    <nz-option nzLabel="名师培训" [nzValue]="3">名师培训</nz-option>
+                </nz-select> 
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>封面图:</label>
+            <div class="picture">
+                <crop-image [aspectRatio]="720/320" (onComplete)="uploadImgComplete($event, 1)">
+                    <nz-upload class="avatar-uploader" nzName="avatar" nzListType="picture-card" [nzShowUploadList]="false">
+                        <ng-container *ngIf="!params.picture">
+                            <i class="upload-icon" nz-icon [nzType]="'plus'"></i>
+                            <div class="ant-upload-text">上传图片</div>
+                        </ng-container>
+                        <img *ngIf="params.picture" [src]="ossPath + params.picture" class="avatar"/>
+                    </nz-upload>
+                </crop-image>
+                <span>建议上传尺寸为750*375px</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">海报分享图:</label>
+            <div class="picture">
+                <div>
+                    <crop-image [aspectRatio]="1" (onComplete)="uploadImgComplete($event,2)">
+                        <nz-upload class="avatar-uploader" nzName="poster_picture" nzListType="picture-card" [nzShowUploadList]="false">
+                            <ng-container *ngIf="!params.poster_picture">
+                                <i class="upload-icon" nz-icon [nzType]="'plus'"></i>
+                                <div class="ant-upload-text">上传图片</div>
+                            </ng-container>
+                            <img *ngIf="params.poster_picture" [src]="ossPath + params.poster_picture" class="avatar"/>
+                        </nz-upload>
+                    </crop-image>
+                </div>
+                <span>建议上传图片比例为1:1</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">微信分享图:</label>
+            <div class="picture">
+                <div>
+                    <crop-image [aspectRatio]="5/4" (onComplete)="uploadImgComplete($event,3)">
+                        <nz-upload class="avatar-uploader" nzName="wx_picture" nzListType="picture-card" [nzShowUploadList]="false">
+                            <ng-container *ngIf="!params.wx_picture">
+                                <i class="upload-icon" nz-icon [nzType]="'plus'"></i>
+                                <div class="ant-upload-text">上传图片</div>
+                            </ng-container>
+                            <img *ngIf="params.wx_picture" [src]="ossPath + params.wx_picture" class="avatar"/>
+                        </nz-upload>
+                    </crop-image>
+                </div>
+                <span>建议上传图片比例为5:4</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>联系电话:</label>
+            <div>
+                <input nz-input type="tel" placeholder="请输入联系电话" nyName="contact" errorStyle="float"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>报名名额:</label>
+            <div>
+                <nz-input-number nyName="number" [nzMin]="1" errorStyle="float" style="width: 200px;"></nz-input-number>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>学费:</label>
+            <div>
+                <nz-input-number nyName="tuition" [nzMin]=".01" errorStyle="float" style="width: 200px;"></nz-input-number>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">学期是否提供住宿:</label>
+            <div style="padding-top: 5px;">
+                <nz-radio-group [(ngModel)]="params.is_contain_quarterage">
+                    <label nz-radio [nzValue]="1">是</label>
+                    <label nz-radio [nzValue]="0">否</label>
+                </nz-radio-group>
+            </div>
+        </div>
+
+        <div class="form-group flex-center">
+            <label class="label">报名方式:</label>
+            <div>
+                <nz-radio-group [(ngModel)]="params.register_mode">
+                    <label nz-radio [nzValue]="10">定金</label>
+                    <label nz-radio [nzValue]="20">全款</label>
+                </nz-radio-group>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">押金:</label>
+            <div>
+                <nz-input-number nyName="deposit" errorStyle="float"  style="width: 200px;"></nz-input-number>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>学期介绍:</label>
+            <div>
+                <ueditor [(ngModel)]="introduction"></ueditor>
+            </div>
+        </div>
+    </div>
+</ny-modal>

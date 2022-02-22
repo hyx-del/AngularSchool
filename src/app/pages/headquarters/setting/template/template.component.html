@@ -1,0 +1,218 @@
+<div class="container" *ngIf="detailParams">
+    <!-- 添加 -->
+    <div class="middle svg-box" *ngIf="!detailParams.id">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             xmlns:xlink="http://www.w3.org/1999/xlink"
+             version="1.1"
+             [style.width]="width"
+             [style.height]="height"
+             id="svg"
+             font-family="SourceHanSansCN Medium"
+             font-weight="500">
+            <image xlink:href='' [style.width]="width" [style.height]="height" id="svgImage"></image>
+        </svg>
+    </div>
+
+    <!-- 详情 -->
+    <div class="middle svg-box" *ngIf="detailParams.id"></div>
+
+    <div class="right">
+        <div class="operation">
+            <nz-upload [nzShowUploadList]="false" [nzCustomRequest]="uploadImg">
+                <button nz-button><i nz-icon nzType="upload"></i>上传图片</button>
+            </nz-upload>
+
+            <button nz-button (click)="setting()">
+                <i nz-icon nzType="setting" nzTheme="outline"></i>设置
+            </button>
+
+            <button nz-button (click)="addText()">
+                <i nz-icon nzType="font-size" nzTheme="outline"></i>添加文字
+            </button>
+
+            <button nz-button (click)="addContent()">
+                <i nz-icon nzType="font-size" nzTheme="outline"></i>添加内容
+            </button>
+
+        </div>
+        <div class="setting" *ngIf="isSetting">
+            <div nz-row class="my-ant-row">
+                <div nz-col nzSpan="5">模板宽度:</div>
+                <div nz-col nzSpan="12">
+                    <nz-input-number [nzMin]="100" [nzMax]="1000" [(ngModel)]="width" (ngModelChange)="widthChange($event)" style="width: 100%"
+                                     [nzPrecision]="3"></nz-input-number>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!isSetting && !isShowContent">
+            <div nz-row class="my-ant-row">
+                <div nz-col nzSpan="5">文本:</div>
+                <div nz-col nzSpan="19">
+                    <textarea nz-input rows="4" style="resize: none;" [(ngModel)]="textActiveData.text" (ngModelChange)="textChange($event)"></textarea>
+                </div>
+            </div>
+            <div nz-row class="my-ant-row" style="margin: 8px 0">
+                <div nz-col nzSpan="5">
+                    字段选择:
+                </div>
+                <div nz-col nzSpan="18">
+                    <nz-select style="width: 160px;" [(ngModel)]="selectedValue" nzPlaceHolder="请选择更改字段" (ngModelChange)="setTextActiveData($event)" style="width: 160px">
+                        <nz-option [nzValue]="item.value" [nzLabel]="item.label" *ngFor="let item of dataList"></nz-option>
+                    </nz-select>
+                    <em style="color: red">(必选)</em>
+                </div>
+            </div>
+            <div nz-row class="my-ant-row">
+                <div nz-col nzSpan="5">文字字号:</div>
+                <div nz-col nzSpan="12">
+                    <nz-input-number [(ngModel)]="textActiveData.font" (ngModelChange)="fontSizeChange($event)"></nz-input-number>
+                </div>
+            </div>
+            <div nz-row class="my-ant-row">
+                <div nz-col nzSpan="5">文字颜色:</div>
+                <div nz-col nzSpan="18">
+                    <input nz-input type="color" style="width: 90px" [(ngModel)]="textActiveData.fill" (ngModelChange)="textColorChange($event)"/>
+                </div>
+            </div>
+            <div nz-row class="my-ant-row">
+                <div nz-col nzSpan="5">边距规格:</div>
+                <div nz-col nzSpan="18">
+                    <span class="tag" *ngFor='let item of sizeRange' (click)='tagCheckChange(item)' [class.activeTag]='item.checked'>{{ item.label }}</span>
+                </div>
+            </div>
+            
+            <div style="margin: 8px 0">
+                <div>左边距:</div>
+                <nz-row>
+                    <nz-col nzSpan="12">
+                        <nz-slider [nzMin]="5" [nzMax]="95" [(ngModel)]="leftPrice" (ngModelChange)="leftPriceChange($event)"></nz-slider>
+                    </nz-col>
+                    <div nz-col nzSpan="4">
+                        <nz-input-number
+                            [nzMin]="5"
+                            [nzMax]="95"
+                            [nzStep]="setp"
+                            [nzPrecision]='2'
+                            [ngStyle]="{ marginLeft: '16px' }"
+                            [(ngModel)]="leftPrice"
+                            (ngModelChange)="leftPriceChange($event)"
+                        ></nz-input-number>
+                    </div>
+                </nz-row>
+            </div>
+            <div style="margin: 8px 0">
+                <div>上边距:</div>
+                <nz-row>
+                    <nz-col nzSpan="12">
+                        <nz-slider [nzMin]="5" [nzMax]="95" [(ngModel)]="topPrice" (ngModelChange)="topPriceChange($event)"></nz-slider>
+                    </nz-col>
+                    <div nz-col nzSpan="4">
+                        <nz-input-number
+                            [nzMin]="5"
+                            [nzMax]="95"
+                            [nzStep]="setp"
+                            [nzPrecision]='2'
+                            [ngStyle]="{ marginLeft: '16px' }"
+                            [(ngModel)]="topPrice"
+                            (ngModelChange)="topPriceChange($event)"
+                        ></nz-input-number>
+                    </div>
+                </nz-row>
+            </div>
+
+            <button nz-button nzType="danger" (click)="remove()">删除</button>
+        </div>
+
+        <div *ngIf="!isSetting && isShowContent">
+            <div nz-row class="my-ant-row">
+                <div nz-col nzSpan="5">内容:</div>
+                <div nz-col nzSpan="19">
+                    <textarea nz-input rows="4" style="resize: none;" [(ngModel)]="contentActiveData.content"
+                              (ngModelChange)="contentChange($event)"></textarea>
+                </div>
+            </div>
+
+            <div nz-row class="my-ant-row">
+                <div nz-col nzSpan="5">文字字号:</div>
+                <div nz-col nzSpan="12">
+                    <nz-input-number [(ngModel)]="contentActiveData.font" (ngModelChange)="contentFontChange($event)"></nz-input-number>
+                </div>
+            </div>
+
+            <div nz-row class="my-ant-row">
+                <div nz-col nzSpan="5">文字颜色:</div>
+                <div nz-col nzSpan="12">
+                    <input nz-input type="color" style="width: 90px" [(ngModel)]="contentActiveData.color" (ngModelChange)="contentColorChange($event)"/>
+                </div>
+            </div>
+
+            <div class="contentBoxWidth">
+                <nz-row>
+                    <nz-col nzSpan="5">宽度：</nz-col>
+                    <div nz-col nzSpan="15">
+                        <nz-input-number [(ngModel)]="contentActiveData.width" [nzMin]="5" [nzMax]="100" [nzFormatter]="formatterPercent"
+                                         [nzParser]="parserPercent" (ngModelChange)="contentBoxWidthChange($event)">
+                        </nz-input-number>
+                    </div>
+                </nz-row>
+            </div>
+
+            <div nz-row class="my-ant-row">
+                <div nz-col nzSpan="5">边距规格:</div>
+                <div nz-col nzSpan="18">
+                    <span class="tag" *ngFor='let item of sizeRange' (click)='tagCheckChange(item)' [class.activeTag]='item.checked'>{{ item.label }}</span>
+                </div>
+            </div>
+
+            <div class="subline">
+                <nz-row>
+                    <nz-col nzSpan="5">辅助线:</nz-col>
+                    <nz-col nzSpan="12">
+                        <nz-switch [ngModel]="switchValue" nzCheckedChildren="启用" nzUnCheckedChildren="关闭"
+                                   (ngModelChange)="switchChange($event)"></nz-switch>
+                    </nz-col>
+                </nz-row>
+            </div>
+
+            <div style="margin: 8px 0">
+                <div>左边距:</div>
+                <nz-row>
+                    <nz-col nzSpan="12">
+                        <nz-slider [nzMin]="0" [nzMax]="100" [(ngModel)]="leftPrice" (ngModelChange)="xValueChange($event)"></nz-slider>
+                    </nz-col>
+                    <div nz-col nzSpan="4">
+                        <nz-input-number 
+                            [nzMin]="0" 
+                            [nzMax]="100"
+                            [nzStep]="setp" 
+                            [ngStyle]="{ marginLeft: '16px' }" 
+                            [(ngModel)]="leftPrice"
+                            (ngModelChange)="xValueChange($event)"
+                        ></nz-input-number>
+                    </div>
+                </nz-row>
+            </div>
+            <div style="margin: 8px 0">
+                <div>上边距:</div>
+                <nz-row>
+                    <nz-col nzSpan="12">
+                        <nz-slider [nzMin]="0" [nzMax]="100" [(ngModel)]="topPrice" (ngModelChange)="yValueChange($event)"></nz-slider>
+                    </nz-col>
+                    <div nz-col nzSpan="4">
+                        <nz-input-number
+                            [nzMin]="0" 
+                            [nzMax]="100"
+                            [nzStep]="setp" 
+                            [ngStyle]="{ marginLeft: '16px' }" 
+                            [(ngModel)]="topPrice"
+                            (ngModelChange)="yValueChange($event)"
+                        ></nz-input-number>
+                    </div>
+                </nz-row>
+            </div>
+            <button nz-button nzType="danger" (click)="contentRemove()">删除</button>
+        </div>
+    </div>
+</div>
+

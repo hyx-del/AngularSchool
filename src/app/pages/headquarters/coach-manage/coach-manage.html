@@ -1,0 +1,95 @@
+<content-header [collection]="collection">
+    <ny-search-input [uri]="'school/teaching/coach/list'" (collection)="setCollection($event)" [pageSize]="50">
+    </ny-search-input>
+</content-header>
+
+<ny-table [showIndex]="true" [collection]="collection"></ny-table>
+
+<!-- model -->
+<ny-modal (onClose)="cancelDetailModel()" [isFull]="true" appendTo="nz-content" [(visible)]="detailModelVisible">
+    <ny-header>
+        <h2>教练详情</h2>
+        <p style="flex: 1"></p>
+    </ny-header>
+    <div nyForm="detailForm">
+        <div class="form-group">
+            <label class="label"><em>*</em>姓名:</label>
+            <div>
+                <input nz-input nyName="name" [disabled]="true">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">英文名:</label>
+            <div>
+                <input nz-input nyName="name_en" [disabled]="true">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>手机号:</label>
+            <div>
+                <input nz-input nyName="mobile" [disabled]="true">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">照片:</label>
+            <div>
+                <nz-upload class="avatar-uploader" nzListType="picture-card" [nzShowUploadList]="false" [nzDisabled]='true'>
+                    <ng-container *ngIf="!picture">
+                        <i class="upload-icon" nz-icon [nzType]="'plus'"></i>
+                        <div class="ant-upload-text">上传图片</div>
+                    </ng-container>
+                    <img *ngIf="picture" class="avatar" [src]="ossPath + picture" />
+                </nz-upload>
+            </div>
+        </div>
+
+        <div class="form-group flex-center">
+            <label class="label">性别:</label>
+            <div>
+                <nz-radio-group nyName="gender" [nzDisabled]='true'>
+                    <label nz-radio [nzValue]="1">男</label>
+                    <label nz-radio [nzValue]="2">女</label>
+                </nz-radio-group>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>入职日期:</label>
+            <div>
+                <nz-date-picker nyName="entry_time" [nzDisabled]='true'></nz-date-picker>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">住址:</label>
+            <div>
+                <input nz-input nyName='address' [disabled]="true">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">权重:</label>
+            <div>
+                <nz-input-number [nzMin]="0" nyName="weights" [disabled]="true"></nz-input-number>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">个人简介:</label>
+            <div>
+                <textarea nz-input nyName='profile' [rows]='3' style="width: 300px;resize: none;" [disabled]="true">
+                </textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">详细介绍:</label>
+            <div>
+                <ueditor [(ngModel)]="remark" *ngIf='detailModelVisible' [disabled]='true'></ueditor>
+            </div>
+        </div>
+    </div>
+</ny-modal>

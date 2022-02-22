@@ -1,0 +1,8 @@
+<content-header [collection]="collection">
+    <ny-search-input [uri]="'school/teaching-school/achievement/list'" (collection)="setCollection($event)"
+                     [pageSize]="50"></ny-search-input>
+</content-header>
+
+<ny-table [collection]="collection" [showIndex]="true">
+
+</ny-table>

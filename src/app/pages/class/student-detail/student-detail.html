@@ -1,0 +1,142 @@
+<ny-modal [isFull]="true" appendTo="nz-content" [(visible)]="detailVisible" (onClose)="cancel()">
+    <ny-header>
+        <h2>学员详情</h2>
+        <p style="flex: 1"></p>
+    </ny-header>
+    <div class="modal-content member-modal-content">
+        <div class="user-info">
+            <div class="head-avatar">
+                <img *ngIf="!params.avatar && params.id" src="../../../../../assets/img/user-30.svg" width="100%" />
+                <img *ngIf="params.avatar" [src]="ossPath + params.avatar" width="100%" />
+              </div>
+              <div class="info">
+                <div class="name mb8">{{ params.name }}</div>
+                <div>{{ params.mobile }}</div>
+              </div>
+        </div>
+        <div style="flex: 1;overflow: hidden;display: flex;">
+            <nz-tabset style="width: 100%" *ngIf="detailVisible">
+                <nz-tab nzTitle="基本信息">
+                    <div class="form-group">
+                        <label class="label"><em>*</em>姓名:</label>
+                        <div>
+                            <input nz-input [(ngModel)]="params.name" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">英文名字:</label>
+                        <div>
+                            <input nz-input [(ngModel)]="params.english_name" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label"><em>*</em>手机号:</label>
+                        <div>
+                            <input nz-input [(ngModel)]="params.mobile" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">邮箱:</label>
+                        <div>
+                            <input nz-input type='email' [(ngModel)]="params.email" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group flex-center">
+                        <label class="label"><em>*</em>性别:</label>
+                        <div>
+                            <nz-radio-group [(ngModel)]="params.gender" disabled>
+                                <label nz-radio [nzValue]="1">男</label>
+                                <label nz-radio [nzValue]="2">女</label>
+                            </nz-radio-group>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">头像:</label>
+                        <div *ngIf='params.avatar'>
+                            <nz-upload class="avatar-uploader" nzListType="picture-card" [nzShowUploadList]="false" [nzDisabled]="true">
+                                <img class="avatar" [src]="ossPath + params.avatar" width="100%"/>
+                            </nz-upload>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label"><em>*</em>地址:</label>
+                        <div>
+                            <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="params.province_id" [nzDisabled]="true">
+                                <nz-option *ngFor="let province of provinceList" [nzLabel]="province.name"
+                                           [nzValue]="province.id">
+                                </nz-option>
+                            </nz-select>
+                            <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="params.city_id" [nzDisabled]="true">
+                                <nz-option *ngFor="let city of cityList" [nzLabel]="city.name" [nzValue]="city.id">
+                                </nz-option>
+                            </nz-select>
+                            <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="params.area_id" [nzDisabled]="true">
+                                <nz-option *ngFor="let area of areaList" [nzLabel]="area.name" [nzValue]="area.id">
+                                </nz-option>
+                            </nz-select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label"><em>*</em>状态:</label>
+                        <div>
+                            <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="params.status" [nzDisabled]="true">
+                                <nz-option *ngFor="let status of statusData" [nzLabel]="status.label"
+                                           [nzValue]="status.value"></nz-option>
+                            </nz-select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">注册派别:</label>
+                        <div>
+                            <nz-select style="width: 200px;" [(ngModel)]="params.genre_value" nzMode="multiple" [nzDisabled]="true">
+                                <nz-option *ngFor="let item of faction" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                            </nz-select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label"><em>*</em>注册等级:</label>
+                        <div>
+                            <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="params.degree" [nzDisabled]="true">
+                                <nz-option *ngFor="let item of registerGradeData" [nzLabel]="item.label"
+                                           [nzValue]="item.value"></nz-option>
+                            </nz-select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">工作单位:</label>
+                        <div>
+                            <input nz-input [(ngModel)]="params.company" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">描述:</label>
+                        <div>
+                <textarea nz-input [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+                          style="width: 300px;resize: none;" [(ngModel)]="params.introduction" disabled></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">备注:</label>
+                        <div>
+                <textarea nz-input placeholder="住址" [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+                          style="width: 300px;resize: none;" [(ngModel)]="params.remark" disabled></textarea>
+                        </div>
+                    </div>
+                </nz-tab>
+            </nz-tabset>
+        </div>
+    </div>
+</ny-modal>
+

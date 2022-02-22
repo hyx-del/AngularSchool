@@ -1,0 +1,192 @@
+/* You can add global styles to this file, and also import other style files */
+ol, ul, dl {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-width: 1230px;
+}
+
+/*滚动条整体样式*/
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	background: 0 0;
+}
+/*滚动条滑块*/
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background-color: #ccc;
+  &:hover {
+        background: rgba(0, 0, 0, 0.35);
+    }
+}
+
+.form-group {
+    margin-bottom: 16px;
+    display: flex;
+    & > em {
+        color: #ff0000;
+        margin-right: 4px;
+    }
+  .unit {
+    display: inline-block;
+    margin-left: 8px;
+    line-height: 32px;
+  }
+
+  .label {
+        display: inline-block;
+        width: 120px;
+        margin-right: 8px;
+        line-height: 32px;
+        text-align: right;
+        em {
+            color: #ff0000;
+            margin-right: 4px;
+        }
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    nz-time-picker {
+        input {
+            width: 128px;
+        }
+    }
+
+    input {
+        width: 200px;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      width: auto;
+    }
+
+    // nz-input-number,
+    // nz-picker {
+    nz-input-number {
+      input {
+        width: 100%;
+      }
+    }
+
+    .ant-calendar-range-picker-input {
+      width: 44% !important;
+    }
+}
+.edui-for-image .edui-icon{
+  background-position: -380px 0px;
+}
+
+.edui-for-video .edui-icon{
+  background-position: -320px -20px;
+}
+
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .ant-tabs {
+    flex: 1;
+
+    .ant-tabs-top-content {
+      height: calc(100% - 60px);
+
+      .ant-tabs-tabpane {
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+    }
+
+    .edui-default .edui-editor-toolbarbox {
+      position: sticky!important;
+      top: 0px;
+      z-index: 1000;
+    }
+  }
+}
+
+.flex-center {
+  align-items: center;
+}
+
+.ant-layout-sider-children {
+  overflow: auto;
+  height: calc(100% - 48px);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.ant-layout {
+  &.collapsed {
+    ny-modal {
+      left: 90px!important;
+    }
+  }
+  ny-modal {
+    left: 210px !important;
+  }
+}
+.error-message {
+  color: #e62a10;
+  font-size: 0.75em;
+
+  & > span {
+      display: block;
+  }
+}
+
+.ml8 {
+  margin-left: 8px;
+}
+
+.mr8 {
+  margin-right: 8px;
+}
+.custom-drawer {
+  height: calc(100% - 118px) !important;
+  top: 108px;
+}
+.danger{
+  color: #fff !important;
+  background-color: #ff4d4f !important;
+  border-color: #ff4d4f !important;
+}
+.ant-btn-danger:hover {
+  color: #fff!important;
+  background-color: #f56c6c!important;
+  border-color: #f56c6c!important;
+}
+.btnmg{
+  margin-left: 50px;
+}
+
+.certificate-record .content .condition-container {
+  flex: none !important;
+}
+
+// nz-drawer
+.custom-drawer {
+    height: calc(100% - 118px) !important;
+    top: 108px;
+}
+
+.ant-drawer-wrapper-body {
+    display: flex;
+    overflow: visible !important;
+    flex-direction: column;
+}
+
+.ant-drawer-body {
+    flex: 1;
+    overflow: auto;
+}

@@ -1,0 +1,30 @@
+<content-header [buttonGroups]="buttons" [collection]="collection">
+  <ny-search-input [uri]="'school/teaching-school/classroom/list'" [pageSize]="50" (collection)="setCollection($event)"></ny-search-input>
+</content-header>
+
+<ny-table [collection]="collection" [showIndex]="true">
+  <ng-template nyColumn label="操作" width='200px' let-item>
+    <a *ngIf="item.status==  1" (click)="disabled(item)">禁用</a>
+    <a *ngIf="item.status== -1" (click)="enable(item)">启用</a>
+      <nz-divider nzType="vertical"></nz-divider>
+      <a (click)="remove(item)">删除</a>
+  </ng-template>
+</ny-table>
+
+<!-- 添加、修改 modal -->
+<nz-modal [(nzVisible)]="addClassRoomShow" [nzTitle]="params.id ? '修改' : '添加教室'" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+    [nzWidth]="500" [nzMaskClosable]="false">
+    <div nyForm="form" (onInit)="onFormInit($event)">
+        <div class="form-group">
+            <label class="label"><em>*</em>教室名称:</label>
+            <div>
+                <input nz-input placeholder="请输入教室名称" nyName="name" errorStyle="float" [(ngModel)]="params.name" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">容纳人数:</label>
+            <nz-input-number  nyName="max_number"  [nzMin]="1" [nzStep]="1" style="width:110px;" errorStyle="float">
+            </nz-input-number>
+        </div>
+    </div>
+</nz-modal>

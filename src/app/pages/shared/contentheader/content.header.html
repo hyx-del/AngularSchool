@@ -1,0 +1,73 @@
+<button *ngIf="buttonOptions.create" nz-button nzType="primary" (click)="buttonClick(buttonOptions.create)">
+    <i nz-icon type="plus" theme="outline"></i>
+    <span>{{ buttonOptions.create.label ? buttonOptions.create.label : '添加' }}</span>
+</button>
+
+<div class="content">
+    <ng-content></ng-content>
+</div>
+
+<!--是否创建新按钮-->
+<div class="button-group" [ngStyle]="{'margin-left':buttonOptions.newBtn.length == 1 ? '8px': ''}">
+    <ng-container *ngIf="buttonOptions.newBtn.length<=1">
+        <button *ngFor="let item of buttonOptions.newBtn" nz-button [nzType]="item.nzType?item.nzType:'default'"
+            (click)="newButtonClick(item)" style="border-radius: 4px">
+            <i nz-icon [type]="item.icon" *ngIf="item.icon"></i>
+            {{item.label}}
+        </button>
+    </ng-container>
+    <ng-container *ngIf="buttonOptions.newBtn.length>1">
+        <button *ngFor="let item of buttonOptions.newBtn;let i = index" nz-button
+            [ngClass]="item.isActive?'active':''" [nzType]="item.nzType?item.nzType:'default'"
+            (click)="newButtonClick(item,i)">
+            <i nz-icon [type]="item.icon" *ngIf="item.icon"></i>
+            {{item.label}}
+        </button>
+    </ng-container>
+</div>
+
+<!-- 下拉式 -->
+<div class="dropdown" *ngIf='buttonOptions.dropdownData.length'>
+    <nz-dropdown [nzPlacement]="'bottomLeft'" [nzTrigger]="'click'">
+        <button nz-button nz-dropdown ><i nz-icon nzType="setting" nzTheme="outline"></i>操作</button>
+        <ul nz-menu>
+          <li nz-menu-item *ngFor='let item of buttonOptions.dropdownData; let i = index' (click)="newButtonClick(item,i)">
+            <i nz-icon [type]="item.icon" *ngIf="item.icon"></i>
+            <a>{{item.label}}</a>
+          </li>
+        </ul>
+    </nz-dropdown>
+</div>
+
+<!-- 分页 -->
+<div class="pagination" *ngIf="collection.size">
+    <nz-button-group>
+        <button nz-button [disabled]="collection.page<=1" (click)="prevPage(true)">
+            <i nz-icon nzType="vertical-right" nzTheme="outline"></i>
+        </button>
+        <button nz-button [disabled]="collection.page<=1" (click)="prevPage()">
+            <i nz-icon nzType="left" nzTheme="outline"></i>
+        </button>
+        <button nz-button>
+            <span>{{collection.page}}/{{collection.pageTotal}}</span>
+        </button>
+        <button nz-button [disabled]="collection.page>=collection.pageTotal" (click)="nextPage()">
+            <i nz-icon nzType="right" nzTheme="outline"></i>
+        </button>
+        <button nz-button [disabled]="collection.page>=collection.pageTotal" (click)="nextPage(true)">
+            <i nz-icon nzType="vertical-left" nzTheme="outline"></i>
+        </button>
+    </nz-button-group>
+
+    <nz-dropdown [nzTrigger]="'click'">
+        <button nz-button nz-dropdown>
+            <span>{{collection.size}}</span>
+            <i nz-icon type="down"></i>
+        </button>
+        <ul nz-menu>
+            <li nz-menu-item *ngFor="let item of pageSizeList" (click)="collection.size = item">
+                {{item}}
+            </li>
+        </ul>
+    </nz-dropdown>
+</div>

@@ -1,0 +1,593 @@
+<ny-modal [isFull]="true" appendTo="nz-content" [(visible)]="detailVisible" (onClose)="cancel()">
+    <ny-header>
+        <h2>学员详情</h2>
+        <p style="flex: 1"></p>
+    </ny-header>
+    <div class="modal-content member-modal-content">
+        <div class="user-info">
+            <div class="head-avatar">
+                <img *ngIf="!params.avatar && params.id" src="../../../../../assets/img/user-30.svg" width="100%" />
+                <img *ngIf="params.avatar" [src]="ossPath + params.avatar" width="100%" />
+              </div>
+              <div class="info">
+                <div class="name mb8">{{ params.name }}</div>
+                <div>{{ params.mobile }}</div>
+              </div>
+        </div>
+        <div style="flex: 1;overflow: hidden;display: flex;">
+            <nz-tabset (nzSelectChange)="tabChange($event)" style="width: 100%" *ngIf="detailVisible">
+                <nz-tab nzTitle="基本信息">
+					<div nyForm="detailForm" (onInit)="subInfoForm()" (onChange)="onDetailFormChange($event)">
+					  <div class="form-group">
+						<label class="label"><em>*</em>姓名:</label>
+						<div>
+						  <input nz-input nyName="name" errorStyle="float">
+						</div>
+					  </div>
+		  
+					  <div class="form-group">
+						<label class="label">英文名字:</label>
+						<div>
+						  <input nz-input nyName="english_name" errorStyle="float">
+						</div>
+					  </div>
+		  
+					  <div class="form-group">
+						<label class="label"><em>*</em>手机号:</label>
+						<div>
+						  <input nz-input nyName="mobile" errorStyle="float">
+						</div>
+					  </div>
+
+                        <div class="form-group">
+                            <label class="label">微信号:</label>
+                            <div>
+                                <input nz-input nyName="wechat_id" errorStyle="float">
+                            </div>
+                        </div>
+		  
+					  <div class="form-group">
+						<label class="label">邮箱:</label>
+						<div>
+						  <input nz-input type='email' nyName="email" errorStyle="float">
+						</div>
+					  </div>
+		  
+					  <div class="form-group flex-center">
+						<label class="label"><em>*</em>性别:</label>
+						<div>
+						  <nz-radio-group nyName="gender">
+							<label nz-radio [nzValue]="1">男</label>
+							<label nz-radio [nzValue]="2">女</label>
+						  </nz-radio-group>
+						</div>
+					  </div>
+		  
+					  <div class="form-group">
+						<label class="label">头像:</label>
+						<div>
+						  <crop-image [aspectRatio]="1" (onComplete)="uploadImgComplete($event)">
+							<nz-upload class="avatar-uploader" nzListType="picture-card" [nzShowUploadList]="false">
+							  <ng-container *ngIf="!picture">
+								<i class="upload-icon" nz-icon [nzType]="uploadLoading ? 'loading' : 'plus'"></i>
+								<div class="ant-upload-text">上传图片</div>
+							  </ng-container>
+							  <img *ngIf="picture" class="avatar" [src]="ossPath + picture"/>
+							</nz-upload>
+						  </crop-image>
+						</div>
+					  </div>
+		  
+					  <div class="form-group">
+						<label class="label"><em>*</em>地址:</label>
+						<div>
+						  <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="params.province_id" (ngModelChange)="onChange($event,'province')">
+							<nz-option *ngFor="let province of provinceList" [nzLabel]="province.name" [nzValue]="province.id">
+							</nz-option>
+						  </nz-select>
+						  <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="params.city_id" (ngModelChange)="onChange($event,'city')">
+							<nz-option *ngFor="let city of cityList" [nzLabel]="city.name" [nzValue]="city.id">
+							</nz-option>
+						  </nz-select>
+						  <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="params.area_id">
+							<nz-option *ngFor="let area of areaList" [nzLabel]="area.name" [nzValue]="area.id">
+							</nz-option>
+						  </nz-select>
+						</div>
+					  </div>
+		  
+					  <div class="form-group">
+						<label class="label"><em>*</em>状态:</label>
+						<div>
+						  <nz-select style="width: 200px;margin-right: 10px;" nyName="status" errorStyle="float">
+							  <nz-option *ngFor="let status of statusData" [nzLabel]="status.label" [nzValue]="status.value"></nz-option>
+						  </nz-select>
+						</div>
+					  </div>
+		  
+					  <div class="form-group">
+						<label class="label">注册派别:</label>
+						<div>
+							<nz-select style="width: 200px;" nyName="genre" nzMode="multiple">
+								<nz-option *ngFor="let item of cliqueList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+							</nz-select>
+						</div>
+					  </div>
+		  
+					  <div class="form-group">
+						<label class="label"><em>*</em>注册等级:</label>
+						<div>
+							<nz-select style="width: 200px;margin-right: 10px;" nyName="degree">
+								<nz-option *ngFor="let item of registerGradeData" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+							</nz-select>
+						</div>
+					  </div>
+
+                      <div class="form-group">
+                        <label class="label">销售员:</label>
+                        <div>
+                            <nz-select style="width: 200px;" nyName="salesman_id" [disabled]="true">
+                                <nz-option *ngFor="let item of salesmanList" [nzLabel]="item.name" [nzValue]="item.id"  ></nz-option>
+                            </nz-select>
+                        </div>
+                    </div>
+		  
+					  <div class="form-group">
+						  <label class="label">工作单位:</label>
+						  <div>
+							  <textarea nz-input [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+									style="width: 300px;resize: none;" nyName="company">
+							  </textarea>
+							</div>
+					  </div>
+                        <div class="form-group">
+                            <label class="label"><em>*</em>来源渠道:</label>
+                            <div>
+                                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="source_ids">
+                                    <nz-option *ngFor="let item of sourceChannelList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        
+                        <div nyGroup="additional_data">
+                            <div *ngIf="detailSourceIsStaff">
+                                <div class="form-group">
+                                    <label class="label"><em>*</em>员工姓名:</label>
+                                    <div>
+                                        <input nz-input nyName="staff_name" errorStyle="float">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label"><em>*</em>员工手机号:</label>
+                                    <div>
+                                        <input nz-input nyName="staff_phone" errorStyle="float">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label"><em>*</em>员工所在部门:</label>
+                                    <div>
+                                        <input nz-input nyName="staff_department" errorStyle="float">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" *ngIf="detailSourceIsOther">
+                                <label class="label"><em>*</em>来源渠道备注:</label>
+                                <div>
+                                    <input nz-input nyName="source_remark" errorStyle="float">
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <div class="form-group" *ngIf="detailSourceIsSales">
+                            <label class="label"><em>*</em>推荐人:</label>
+                            <nz-select style="width: 200px;" nyName="referrer_id" errorStyle="float" 
+                                [nzShowSearch]="true" [nzServerSearch]="true" (nzOnSearch)="onSearch($event)" 
+                                (nzScrollToBottom)="loadMore()">
+                                <nz-option *ngFor="let item of referrerMember" [nzLabel]="item.label" [nzValue]="item.id"></nz-option>
+                                <nz-option *ngIf="referrerIsLoading" nzDisabled nzCustomContent>
+                                    <i nz-icon nzType="loading" class="loading-icon"></i> 加载中
+                                </nz-option>
+                            </nz-select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">学习目的:</label>
+                            <div>
+                                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="study_goal_ids">
+                                    <nz-option *ngFor="let item of goalList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">咨询校区:</label>
+                            <div>
+                                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="consult_school_ids">
+                                    <nz-option *ngFor="let item of schoolList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">练习基础:</label>
+                            <div>
+                                <nz-select style="width: 200px;" nyName="practice_base_status">
+                                    <nz-option *ngFor="let item of baseStatus" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+
+                        <div nyGroup="additional_data">
+                            <div class="form-group" *ngIf="detailForm && detailForm.getValue('practice_base_status') == 4">
+                                <label class="label">练习基础备注:</label>
+                                <div>
+                                    <input nz-input nyName="practice_remark" errorStyle="float">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">咨询课程:</label>
+                            <div>
+                                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="consult_course_ids">
+                                    <nz-option *ngFor="let item of consultingCourseList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">沟通方式:</label>
+                            <div>
+                                <nz-select style="width: 200px;" nyName="communication_mode_id">
+                                    <nz-option *ngFor="let item of communicateList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">学习意向:</label>
+                            <div>
+                                <nz-select style="width: 200px;" nyName="study_intention_status">
+                                    <nz-option *ngFor="let item of studyIntentionStatus" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">学员身份:</label>
+                            <div>
+                                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="student_position_ids">
+                                    <nz-option *ngFor="let item of studentPostionList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">资源类型:</label>
+                            <div>
+                                <nz-select style="width: 200px;" nyName="resource_type_id">
+                                    <nz-option *ngFor="let item of resourceList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                                </nz-select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">资源状态:</label>
+                            <input nz-input [(ngModel)]="params.resource_status" [disabled]="true"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">跟进时间:</label>
+                            <nz-date-picker [(ngModel)]="params.follow_time" [nzDisabled]="true" [nzShowTime]="true"></nz-date-picker>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">注册人:</label>
+                            <input nz-input [(ngModel)]="params.operator_name" [disabled]="true"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">分配状态:</label>
+                            <input nz-input [(ngModel)]="params.distribute_status" [disabled]="true"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="label">意向学习时间:</label>
+                            <div>
+                                <nz-range-picker [(ngModel)]="detailExpectedTime" nzShowTime [nzDisabled]="true"></nz-range-picker>
+                            </div>
+                        </div>
+
+					   <div class="form-group">
+						   <label class="label">权重:</label>
+						   <div>
+							   <nz-input-number [nzMin]="0" nyName="weights" errorStyle="float"></nz-input-number>
+						   </div>
+					   </div>
+					  <div class="form-group">
+						<label class="label">描述:</label>
+						<div>
+						  <textarea nz-input [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+									style="width: 300px;resize: none;" nyName="introduction"></textarea>
+						</div>
+					  </div>
+		  
+                        <div class="form-group">
+                            <label class="label">备注:</label>
+                            <div>
+                                <textarea nz-input [nzAutosize]="{ minRows: 3, maxRows: 6 }"
+                                        style="width: 300px;resize: none;" nyName="remark"></textarea>
+                            </div>
+                        </div>
+		  
+					    <div class="form-group">
+                            <label class="label"></label>
+                            <div>
+                                <button nz-button nzType="primary" (click)="saveMember()">保存</button>
+                            </div>
+                        </div>
+					</div>
+				</nz-tab>
+                <nz-tab nzTitle="报名记录">
+                    <div style="display: flex;flex-direction: column;height: 100%" *ngIf="tabsInit[1]">
+                        <content-header [collection]="applyCollection">
+                            <ny-search-input [uri]="'school/teaching-school/student/record_list?id=' + params.id" [pageSize]="50" (collection)="setApplyCollection($event)">
+                            </ny-search-input>
+                        </content-header>
+                        <ny-table [collection]="applyCollection">
+                            <ng-template nyColumn="certificate" width="120px" let-item>
+                                <span *ngIf="item.certificate === '未颁发'">未颁发</span>
+                                <a *ngIf="item.certificate !== '未颁发'" (click)="showPreviewImages(item)">查看</a>
+                            </ng-template>
+                        </ny-table>
+                    </div>
+                </nz-tab>
+                
+                <nz-tab nzTitle="销售修改记录">
+                    <div style="display: flex;flex-direction: column;height: 100%" *ngIf="tabsInit[2]">
+                        <content-header [collection]="collection">
+                            <ny-search-input [uri]="'school/teaching-school/student/salesman-record?student_id=' + params.id" [pageSize]="50" (collection)="setCollection($event)">
+                            </ny-search-input>
+                        </content-header>
+                        <ny-table [collection]="collection" [showIndex]="true"></ny-table>
+                    </div>
+                </nz-tab>
+                <nz-tab nzTitle="跟进记录">
+                    <div style="display: flex;flex-direction: column;height: 100%" *ngIf="tabsInit[3]">
+                        <content-header [buttonGroups]="followButtons" [collection]="followCollection">
+                            <ny-search-input [uri]="'school/teaching-school/student/follow-list?student_id=' + params.id" [pageSize]="50" (collection)="setFollowCollection($event)">
+                            </ny-search-input>
+                        </content-header>
+                        <ny-table [collection]="followCollection" [showIndex]="true"></ny-table>
+                    </div>
+                </nz-tab>
+                <nz-tab nzTitle="线索记录">
+                    <div style="display: flex;flex-direction: column;height: 100%" *ngIf="tabsInit[4]">
+                        <content-header [collection]="introduceCollection">
+                            <ny-search-input [uri]="'school/teaching-school/student/introduce-record?student_id=' + params.id" [pageSize]="50" (collection)="setIntroduceCollection($event)">
+                            </ny-search-input>
+                        </content-header>
+                        <ny-table [collection]="introduceCollection" [showIndex]="true"></ny-table>
+                    </div>
+                </nz-tab>
+            </nz-tabset>
+        </div>
+    </div>
+</ny-modal>
+
+<ny-modal [isFull]="true" appendTo="nz-content" [(visible)]="logVisible" (onClose)="cancelLog()">
+    <ny-header>
+        <h2>添加跟进记录</h2>
+        <p style="flex: 1"></p>
+        <button nz-button nzType="default" (click)="cancelLog()" style="margin-right: 16px;">取消</button>
+        <button nz-button nzType="primary" (click)="createFollowLog()">保存</button>
+    </ny-header>
+    <div nyForm="logForm" (onInit)="logFormInit()" (onChange)="logFormChange($event)">
+
+        <div class="form-group" style="border-bottom: 1px solid #e5e5e5;font-size: 16px;">
+            <label class="label"><b>基础信息</b></label>
+        </div>
+        <div class="form-group">
+            <label class="label"><em>*</em>姓名:</label>
+            <div>
+                <input nz-input nyName="name" errorStyle="float" [disabled]="logParams.name">
+            </div>
+        </div>
+
+        <div class="form-group flex-center">
+            <label class="label"><em>*</em>性别:</label>
+            <div>
+                <nz-radio-group [(ngModel)]="logParams.gender" [nzDisabled]="logParams.gender">
+                    <label nz-radio [nzValue]="1">男</label>
+                    <label nz-radio [nzValue]="2">女</label>
+                </nz-radio-group>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>手机号:</label>
+            <div>
+                <input nz-input nyName="mobile" errorStyle="float" [disabled]="logParams.mobile">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">微信号:</label>
+            <div>
+                <input nz-input nyName="wechat_id" errorStyle="float" [disabled]="logParams.wechat_id">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>地址:</label>
+            <div>
+                <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="logParams.province_id"
+                    (ngModelChange)="onChange($event,'province')" [nzDisabled]="true">
+                    <nz-option *ngFor="let province of provinceList" [nzLabel]="province.name"
+                        [nzValue]="province.id">
+                    </nz-option>
+                </nz-select>
+                <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="logParams.city_id"
+                    (ngModelChange)="onChange($event,'city')" [nzDisabled]="true">
+                    <nz-option *ngFor="let city of cityList" [nzLabel]="city.name" [nzValue]="city.id">
+                    </nz-option>
+                </nz-select>
+                <nz-select style="width: 200px;margin-right: 10px;" [(ngModel)]="logParams.area_id" [nzDisabled]="true">
+                    <nz-option *ngFor="let area of areaList" [nzLabel]="area.name" [nzValue]="area.id">
+                    </nz-option>
+                </nz-select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>来源渠道:</label>
+            <div>
+                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="source_ids">
+                    <nz-option *ngFor="let item of sourceChannelList" [nzLabel]="item.name" [nzValue]="item.id"
+                    [nzDisabled]="item.disabled"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+
+        <!-- 员工家属	该选项需填写 员工姓名、员工手机号、员工所在部门 -->
+        <div nyGroup="additional_data">
+            <div *ngIf="sourceIsStaff">
+                <div class="form-group">
+                    <label class="label"><em>*</em>员工姓名:</label>
+                    <div>
+                        <input nz-input nyName="staff_name" errorStyle="float">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label"><em>*</em>员工手机号:</label>
+                    <div>
+                        <input nz-input nyName="staff_phone" errorStyle="float">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="label"><em>*</em>员工所在部门:</label>
+                    <div>
+                        <input nz-input nyName="staff_department" errorStyle="float">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="sourceIsOther">
+                <label class="label"><em>*</em>来源渠道备注:</label>
+                <div>
+                    <input nz-input nyName="source_remark" errorStyle="float">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group" *ngIf="sourceIsSales">
+            <label class="label"><em>*</em>推荐人:</label>
+            <nz-select style="width: 200px;" nyName="referrer_id" errorStyle="float" 
+                [nzShowSearch]="true" [nzServerSearch]="true" (nzOnSearch)="onSearch($event)" 
+                (nzScrollToBottom)="loadMore()">
+                <nz-option *ngFor="let item of referrerMember" [nzLabel]="item.label" [nzValue]="item.id"></nz-option>
+                <nz-option *ngIf="referrerIsLoading" nzDisabled nzCustomContent>
+                    <i nz-icon nzType="loading" class="loading-icon"></i> 加载中
+                </nz-option>
+            </nz-select>
+        </div>
+
+        <div class="form-group" style="border-bottom: 1px solid #e5e5e5;font-size: 16px;">
+            <label class="label"><b>跟进信息</b></label>
+        </div>
+
+        <div class="form-group">
+            <label class="label">学习目的:</label>
+            <div>
+                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="study_goal_ids">
+                    <nz-option *ngFor="let item of goalList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">咨询校区:</label>
+            <div>
+                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="consult_school_ids">
+                    <nz-option *ngFor="let item of schoolList" [nzLabel]="item.name" [nzValue]="item.id"
+                    [nzDisabled]="item.disabled"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">练习基础:</label>
+            <div>
+                <nz-select style="width: 200px;" nyName="practice_base_status">
+                    <nz-option *ngFor="let item of baseStatus" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+
+        <div nyGroup="additional_data">
+            <div class="form-group" *ngIf="logForm && logForm.getValue('practice_base_status') == 4">
+                <label class="label">练习基础备注:</label>
+                <div>
+                    <input nz-input nyName="practice_remark" errorStyle="float">
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="form-group">
+            <label class="label">咨询课程:</label>
+            <div>
+                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="consult_course_ids">
+                    <nz-option *ngFor="let item of consultingCourseList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label"><em>*</em>沟通方式:</label>
+            <div>
+                <nz-select style="width: 200px;" nyName="communication_mode_id">
+                    <nz-option *ngFor="let item of communicateList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">学习意向:</label>
+            <div>
+                <nz-select style="width: 200px;" nyName="study_intention_status">
+                    <nz-option *ngFor="let item of studyIntentionStatus" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">学员身份:</label>
+            <div>
+                <nz-select style="width: 200px;" [nzMode]="'multiple'" nyName="student_position_ids">
+                    <nz-option *ngFor="let item of studentPostionList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label"><em>*</em>备注:</label>
+            <div>
+                <textarea nz-input [nzAutosize]="{ minRows: 3, maxRows: 6 }" style="width: 300px;resize: none;"
+                    nyName="remark"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label"><em>*</em>资源类型:</label>
+            <div>
+                <nz-select style="width: 200px;" nyName="resource_type_id">
+                    <nz-option *ngFor="let item of resourceList" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+                </nz-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">意向学习时间:</label>
+            <div>
+                <nz-range-picker [(ngModel)]="expectedTime" nzShowTime></nz-range-picker>
+            </div>
+        </div>
+    </div>
+</ny-modal>
+
+
+<nz-modal nzTitle="查看毕业证" [(nzVisible)]="previewVisible" [nzFooter]="null" (nzOnCancel)="closeModal()" [nzWidth]="600">
+    <div>
+        <div style="margin-bottom: 8px;">
+            <img [src]="ossPath + previewImageUrl" style="max-width: 100%;" />
+        </div>
+    </div>
+</nz-modal>

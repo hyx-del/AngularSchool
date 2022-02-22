@@ -1,0 +1,36 @@
+<div class="certificate-record">
+    <content-header [collection]="collection">
+        <ny-complex-search [uri]="'school/teaching-school/certificate/list'" [pageSize]="50"
+                           (collection)="setCollection($event)"></ny-complex-search>
+    </content-header>
+
+    <ny-table [collection]="collection" [showIndex]="true">
+        <ng-template nyColumn="certificate" let-item label="证书查看">
+            <a (click)="certificateToSee(item)">查看</a>
+        </ng-template>
+    </ny-table>
+
+    <nz-drawer [nzClosable]="false" [nzVisible]="certificateToSeeVisible" [nzWidth]="750" nzPlacement="right"
+               nzTitle="Basic Drawer" (nzOnClose)="closeDrawer()" [nzWrapClassName]="'custom-drawer'" [nzTitle]="drawerTitle">
+        <ng-template #drawerTitle>
+            <div class="drawer-header">
+                <h3>颁发证书</h3>
+                <button nz-button nzType="primary" (click)="print()">打印</button>
+            </div>
+        </ng-template>
+
+        <div class="form-group">
+            <label class="label" style="width: 60px">证书名称:</label>
+            <div>
+                <input nz-input [disabled]="true" [(ngModel)]="details.certificate_template_name">
+            </div>
+        </div>
+
+        <ng-container *ngIf="details.certificate">
+            <div class="form-group">
+                <img [src]="ossPath+details.certificate" alt="" width="100%">
+            </div>
+        </ng-container>
+
+    </nz-drawer>
+</div>

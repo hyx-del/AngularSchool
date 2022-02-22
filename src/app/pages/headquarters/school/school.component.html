@@ -1,0 +1,135 @@
+<content-header [buttonGroups]="buttons" [collection]="collection">
+    <ny-search-input [uri]="'school/teaching/school/list'" [pageSize]="50" (collection)="setCollection($event)">
+    </ny-search-input>
+</content-header>
+
+<ny-table [collection]="collection" [showIndex]="true">
+    <ng-template nyColumn label="操作" width="120px" let-item>
+        <a (click)="changeStatus(item)" *ngIf="item.status == 10">开始运营</a>
+        <a (click)="changeStatus(item)" *ngIf="item.status == -20">恢复运营</a>
+        <a (click)="changeStatus(item)" *ngIf="item.status == 20">暂停运营</a>
+    </ng-template>
+</ny-table>
+
+<ny-modal appendTo="nz-content" [isFull]="true" [(visible)]="isVisible" (onClose)="handleCancel()">
+    <ny-header>
+        <h2>{{params.id ? '学校修改' : '添加学校'}}</h2>
+        <p style="flex: 1"></p>
+        <button nz-button nzType="default" (click)="handleCancel()" style="margin-right: 16px;">取消</button>
+        <button nz-button nzType="primary" (click)="handleOk()">保存</button>
+    </ny-header>
+    <div nyForm="form" (onInit)="onFormInit()">
+        <div class="form-group">
+            <label class="label"><em>*</em>学校名称:</label>
+            <div>
+                <input nz-input placeholder="请输入学校名称" nyName="name" errorStyle="float" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">英文名称:</label>
+            <div>
+                <input nz-input placeholder="请输入学校名称" nyName="name_en" errorStyle="float" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>图片:</label>
+            <nz-upload class="avatar-uploader" nzListType="picture-card" [nzShowUploadList]="false"
+                [nzCustomRequest]="uploadImg">
+                <ng-container *ngIf="!params.picture">
+                    <i class="upload-icon" nz-icon [nzType]="UploadLoading ? 'loading' : 'plus'"></i>
+                    <div class="ant-upload-text">上传图片</div>
+                </ng-container>
+                <img *ngIf="params.picture" [src]="ossPath + params.picture" class="avatar" style="width: 100%" />
+            </nz-upload>
+        </div>
+
+        <!-- 场馆图集 -->
+        <div class="form-group">
+            <label class="label">场馆图集:</label>
+            <div style="display: flex;" *ngIf="params.pictures.length">
+                <div class="upload-card" *ngFor="let item of params.pictures;let index = index;">
+                    <div class="upload">
+                        <div class="item-info">
+                            <img [src]="ossPath + item" class="avatar">
+                            <div class="item-actions">
+                                <i nz-icon nzType="delete" nzTheme="outline" (click)="removeFile(index)"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nz-upload class="avatar-uploader" nzListType="picture-card" [nzShowUploadList]="false"
+                [nzCustomRequest]="atlasUploadImg">
+                <ng-container>
+                    <i class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></i>
+                    <div class="ant-upload-text">上传图片</div>
+                </ng-container>
+            </nz-upload>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>联系电话:</label>
+            <div>
+                <input nz-input placeholder="请输入电话" type='tel' nyName="phone" errorStyle="float" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">邮箱地址:</label>
+            <div>
+                <input nz-input placeholder="请输入邮箱地址" nyName="email" errorStyle="float" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>地址:</label>
+            <div>
+                <nz-select style="width: 160px;margin-right: 10px;" [(ngModel)]="params.province_id"
+                    (ngModelChange)="onChange($event, 'province')">
+                    <nz-option *ngFor="let province of provinceList" [nzLabel]="province.name" [nzValue]="province.id">
+                    </nz-option>
+                </nz-select>
+                <nz-select style="width: 160px;margin-right: 10px;" [(ngModel)]="params.city_id">
+                    <nz-option *ngFor="let city of cityList" [nzLabel]="city.name" [nzValue]="city.id"></nz-option>
+                </nz-select>
+                <!--        <nz-select style="width: 160px;margin-right: 10px;" nyName="province_id" errorStyle="float">-->
+                <!--          <nz-option nzValue="jack" nzLabel="Jack" [nzDisabled]="isShowDetail"></nz-option>-->
+                <!--        </nz-select>-->
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>详细地址:</label>
+            <div style="flex: 1;">
+                <input nz-input style="width: 60%;" nyName="address" errorStyle="float" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>英文地址:</label>
+            <div style="flex: 1;">
+                <input nz-input style="width: 60%;" nyName="address_en" errorStyle="float" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label"><em>*</em>经纬度:</label>
+            <div>
+                <input type="text" nz-input nyName="map_point" errorStyle="float" />
+            </div>
+            <span class="unit"><a href="https://lbs.qq.com/tool/getpoint/index.html" target="_blank">经纬度获取工具</a></span>
+        </div>
+
+        <div class="form-group">
+            <label class="label">描述:</label>
+            <div style="flex: 1;">
+                <textarea nz-input placeholder="描述" rows="5" style="width: 40%;" nyName="description"
+                    errorStyle="float"></textarea>
+            </div>
+        </div>
+    </div>
+
+</ny-modal>

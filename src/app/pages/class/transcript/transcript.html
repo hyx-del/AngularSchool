@@ -1,0 +1,33 @@
+<content-header [collection]="collection" [buttonGroups]="buttons">
+    <ny-search-input [uri]="'school/teaching-class/achievement/list'" (collection)="setCollection($event)"
+        [pageSize]="50"></ny-search-input>
+</content-header>
+
+<ny-table [collection]="collection" [showIndex]="true">
+    <ng-template nyColumn let-item label='操作'>
+		<ng-container *ngIf='item.audit !== 10'>
+			<a (click)='inputTranscript(item)'>成绩录入</a>
+			<nz-divider nzType="vertical"></nz-divider>
+			<a (click)='audit(item)'>审核</a>
+		</ng-container>
+    </ng-template>
+</ny-table>
+
+<nz-drawer [nzMaskClosable]="false" [nzTitle]='nzTitle'  [nzVisible]="inputGradeVisible" 
+		   (onClose)="close()" [nzWidth]="300" [nzClosable]='false' [nzWrapClassName]="'custom-drawer'">
+	<ng-template #nzTitle>
+		<div style="display: flex;justify-content: flex-end;">
+			<button type="button" (click)="close()" class="ant-btn" style="margin-right: 8px;"><span>取消</span></button>
+			<button type="button" (click)="save()" class="ant-btn ant-btn-primary"><span>保存</span></button>
+		</div>
+    </ng-template>
+    
+    <div class="form-group student_name">成绩单-{{scoreItem[0]?.student_name || student_name}}</div>
+
+    <div class="form-group" *ngFor="let item of scoreItem">
+        <div>
+            <div style="margin-bottom: 8px;">{{item.course_name}}</div>
+            <nz-input-number [(ngModel)]="item.score" style="width: 200px" [nzMax]="100"></nz-input-number>
+        </div>
+	</div>
+</nz-drawer>

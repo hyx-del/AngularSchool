@@ -1,0 +1,102 @@
+<content-header [buttonGroups]="buttons" [collection]="collection">
+  <ny-search-input [uri]="'school/teaching-school/dorm/list'" [pageSize]="50" (collection)="setCollection($event)">
+  </ny-search-input>
+</content-header>
+
+<ny-table [collection]="collection" [showIndex]="true">
+  <ng-template nyColumn label="操作" width='200px' let-item>
+    <a (click)="detailList(item.id)">添加学员</a>
+	<nz-divider nzType="vertical"></nz-divider>
+    <a *ngIf="item.status==  1" (click)="disabled(item)">禁用</a>
+	<a *ngIf="item.status== -1" (click)="enable(item)">启用</a>
+	<nz-divider nzType="vertical"></nz-divider>
+	<a (click)="removeDorm(item)">删除</a>
+  </ng-template>
+</ny-table>
+
+<ny-modal [isFull]="true" appendTo="nz-content" [(visible)]="detailVisible" (onClose)="close()">
+    <ny-header>
+        <h2>添加学员</h2>
+        <p style="flex: 1"></p>
+	</ny-header>
+	
+	<div class="content">
+		<!-- <h3>宿舍信息</h3>
+		<div class="form-group flex-center">
+			<label class="label reset-label">宿舍名称:</label>
+			<div>
+				{{detailData.name}}
+			</div>
+		</div>
+		<div class="form-group flex-center">
+			<label class="label reset-label">容纳人数:</label>
+			<div>
+				{{detailData.max_number}}
+			</div>
+		</div> -->
+	
+		<div class="table-box">
+			<div>
+				<h3>{{detailData.name}}（{{detailData.used_number}}/{{detailData.max_number}}）</h3>
+				<nz-table [nzData]="detailData.students" [nzScroll]="{y: '300px' }"
+						  [nzShowPagination]="false"
+						  [nzFrontPagination]="false"
+						  [nzSize]="'small'"
+						  nzBordered>
+					<thead>
+					<tr>
+						<th nzWidth="30%" class="tableHead">学员姓名</th>
+						<th nzWidth="30%" class="tableHead">手机号</th>
+						<th nzWidth="30%" class="tableHead">操作</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr *ngFor="let data of detailData.students">
+						<td>{{ data.student_name }}</td>
+						<td>{{ data.student_mobile }}</td>
+						<td><a (click)="memberRemove(data)">删除</a></td>
+					</tr>
+					</tbody>
+				</nz-table>
+			</div>
+	
+			<div *ngIf='detailVisible' style="display: flex; flex-direction: column;height: 100%;">
+				<h3>待分寝学员</h3>
+				<content-header [collection]="collection" [buttonGroups]="allocationButton">
+					<ny-search-input [uri]="allocationUrl" 
+									[pageSize]="50" (collection)="studentCollection($event)">
+					</ny-search-input>
+				</content-header>
+				
+				<ny-table [collection]="studentList" [showIndex]="true">
+					<ng-template nyColumn label="操作" let-item>
+						<a (click)="addStudent(item)">添加</a>
+					</ng-template>
+				</ny-table>
+			</div>
+		</div>
+	</div>
+    
+
+</ny-modal>
+
+<!-- 添加、修改 modal -->
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="this.params.id? '宿舍修改' : '添加宿舍'" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+    [nzWidth]="500" [nzMaskClosable]="false">
+    <div nyForm="form" (onInit)="onFormInit($event)">
+        <div class="form-group">
+            <label class="label"><em>*</em>宿舍名称:</label>
+            <div>
+                <input nz-input placeholder="请输入宿舍名称" nyName="name" errorStyle="float"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">容纳人数:</label>
+            <nz-input-number  nyName="max_number"  [nzMin]="1" [nzStep]="1" style="width:110px;" errorStyle="float">
+            </nz-input-number>
+        </div>
+    </div>
+</nz-modal>
+
+
+

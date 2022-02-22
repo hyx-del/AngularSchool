@@ -1,0 +1,67 @@
+<content-header  [collection]="collection">
+  <ny-search-input [uri]="'school/teaching-school/class/list?is_distribute='+true" [pageSize]="50" (collection)="setCollection($event)">
+  </ny-search-input>
+</content-header>
+
+<div class="member">
+  <div *ngFor="let item of classList" (click)="goToClassDetail(item)" class="class-box">
+      <div class="class-grouping-box">
+          <div class="class-info">
+              <div class="info">
+                  <div class="text" [ngStyle]="{background: item.color}">{{item.text}}</div>
+                  <div class="class-name">
+                      <p>{{ item.name }}</p>
+                      <p>{{ item.semester_name }}</p>
+                  </div>
+              </div>
+
+              <div class="number">学员 {{item.count}} 人</div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<ny-modal appendTo="nz-content" [isFull]="true" (onClose)="cancel()" [(visible)]="isShow">
+  <ny-header>
+      <h2>{{detaillist.semester_name }}—{{ detaillist.name }}</h2>
+      <p style="flex: 1"></p>
+  </ny-header>
+
+  <div *ngIf="isShow" class="addStudentWrap">
+      <content-header [buttonGroups]="buttonClass" [collection]="collectionClass">
+          <ny-search-input [uri]="detailListUrl" [pageSize]="50" (collection)="classCollection($event)">
+          </ny-search-input>
+      </content-header>
+
+      <ny-table [collection]="collectionClass" [showIndex]="true">
+          <ng-template nyColumn label="操作" width='200px' let-item>
+              <a (click)="remove(item)">删除</a>
+          </ng-template>
+      </ny-table>
+  </div>
+</ny-modal>
+
+<!-- 添加学员 modal -->
+<nz-modal
+    [(nzVisible)]="addMemberShow"
+    [nzTitle]="'添加学员'"
+    [nzContent]="modalContent"
+    [nzFooter]="modalFooter"
+    (nzOnCancel)="handleCancel()"
+    [nzWidth]="760"
+>
+    <ng-template #modalContent>
+        <div *ngIf="addMemberShow">
+            <content-header [buttonGroups]="classGroupButton" [collection]="classGroupList">
+                <ny-search-input [uri]="addStudentUrl" [pageSize]="50" (collection)="classGroupCollection($event)">
+                </ny-search-input>
+            </content-header>
+
+            <ny-table [collection]="classGroupList" [showIndex]="true" style="height: 500px;display: flex;flex-direction: column;"></ny-table>
+        </div>
+    </ng-template>
+    <ng-template #modalFooter>
+        <button nz-button (click)="handleCancel()">取消</button>
+    </ng-template>
+</nz-modal>
+

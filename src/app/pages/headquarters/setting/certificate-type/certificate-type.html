@@ -1,0 +1,33 @@
+<content-header [collection]="collection" [buttonGroups]="buttons">
+    <ny-search-input [uri]="'school/teaching/certificate-template/list'" [pageSize]="50"
+                     (collection)="setCollection($event)"></ny-search-input>
+</content-header>
+
+<ny-table [collection]="collection" [showIndex]="true">
+    <ng-template nyColumn label="操作" let-item>
+        <ng-container>
+            <a (click)="startUp(item)" *ngIf="item.status !== 1">启用</a>
+            <a (click)="forbidden(item)" *ngIf="item.status !== 0">禁用</a>
+            <nz-divider nzType="vertical"></nz-divider>
+        </ng-container>
+        <a (click)="remove(item)">删除</a>
+    </ng-template>
+</ny-table>
+
+<ny-modal (onClose)="cancelCertificateModal()" [(visible)]="certificateModalVisible" [isFull]="true" appendTo="nz-content">
+    <ny-header>
+        <h2>证书模版添加</h2>
+        <p style="flex: 1"></p>
+        <button nz-button nzType="default" (click)="cancelCertificateModal()" style="margin-right: 16px;">取消</button>
+        <button nz-button nzType="primary" (click)="save()">保存</button>
+    </ny-header>
+    <div>
+        <div class="form-group">
+            <label class="label"><em>*</em>模板名称:</label>
+            <div>
+                <input nz-input [(ngModel)]="template_name">
+            </div>
+        </div>
+        <app-template #template [detailParams]="params"></app-template>
+    </div>
+</ny-modal>

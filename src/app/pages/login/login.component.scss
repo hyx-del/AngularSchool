@@ -1,0 +1,59 @@
+.logo {
+    width: 120px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    img {
+        width: 100%;
+    }
+}
+
+.login-form-forgot {
+    float: right;
+}
+
+.login-form-button {
+    width: 100%;
+}
+
+.container {
+    background: #f0f2f5;
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("../../../assets/img/bg.svg");
+    background-repeat: no-repeat;
+    background-position: center 110px;
+    background-size: 100%;
+    .content {
+        height: 450px;
+    }
+}
+
+.login {
+    width: 368px;
+    margin: 0 auto;
+    .title {
+        font-size: 16px;
+        color: rgba(0,0,0,0.85);
+        line-height: 24px;
+        margin: 0;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    nz-input {
+        height: 40px;
+        font-size: 16px;
+        input {
+            font-size: 16px;
+        }
+    }
+}
+
+.login-btn {
+    width: 100%;
+    margin-top: 46px;
+    font-size: 16px;
+    height: 40px;
+}

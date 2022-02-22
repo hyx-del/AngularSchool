@@ -1,0 +1,59 @@
+:host{
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    margin-bottom: 16px;
+    &>.content{
+        flex: 1;
+        min-width: 8px;
+    }
+    & > button, & > .button-group {
+        margin-right: 8px;
+    }
+    button:not(.ant-btn-loading)>i{
+        display: inline-block !important;
+    }
+}
+
+.pagination {
+    display: flex;
+    white-space: nowrap;
+    & > nz-button-group {
+        margin-right: 8px;
+        white-space: nowrap;
+    }
+    >.button-group {
+        margin-right: 8px;
+    }
+}
+
+.button-group {
+    white-space: nowrap;
+    button {
+        position: relative;
+        margin-left: -1px;
+        &:hover {
+            z-index: 2;
+        }
+        border-radius: 0;
+    }
+}
+
+.dropdown {
+    margin-right: 8px;
+}
+
+.disabled {
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+    background-color: #FFFFFF;
+}
+
+.Roadius{
+    border-radius: 4px !important;
+}
+
+.active{
+  z-index: 99;
+  border:1px solid #00a0e9!important;
+}

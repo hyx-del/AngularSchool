@@ -1,0 +1,62 @@
+.operation {
+    margin-bottom: 10px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    > button {
+        margin: 10px 15px 0 0;
+    }
+
+    > button:nth-of-type(1) {
+        margin: 0 0 0 15px;
+    }
+}
+
+.my-ant-row {
+    margin: 8px 0;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+
+    .svg-box {
+        background: #99a8b7;
+        overflow: auto;
+        flex: 1;
+        height: 758px;
+        border: 1px solid;
+        display: flex;
+        justify-content: center;
+    }
+
+    .right {
+        width: 320px;
+        padding-left: 16px;
+        line-height: 32px;
+    }
+}
+
+.contentBoxWidth,.contentBoxHeight  {
+    margin: 8px 0
+}
+
+.tag {
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 5px 7px;
+    font-size: 12px;
+    line-height: 12px;
+    cursor: pointer;
+}
+
+.activeTag {
+    border: 1px solid #1890FF;
+    background: #1890FF;
+    color: #fff;
+}
+

@@ -1,0 +1,6 @@
+<content-header [collection]="collection">
+    <ny-search-input [uri]="'school/teaching-school/course/list'" [pageSize]="50" (collection)="setCollection($event)">
+    </ny-search-input>
+</content-header>
+
+<ny-table [showIndex]="true" [collection]="collection"></ny-table>
